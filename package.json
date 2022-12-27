@@ -1,0 +1,22 @@
+{
+  "name": "bp_trading_td",
+  "version": "1.0.0",
+  "description": "An introduction to using Binance's api",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zax-code/BP-Trading-TD.git"
+  },
+  "author": "Zax-code",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zax-code/BP-Trading-TD/issues"
+  },
+  "homepage": "https://github.com/Zax-code/BP-Trading-TD#readme",
+  "dependencies": {
+    "sql.js": "^1.8.0"
+  }
+}
