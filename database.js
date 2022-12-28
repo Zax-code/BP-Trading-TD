@@ -58,3 +58,11 @@ async function insertData(db, table, data) {
 async function deleteData(db, table, ids) {
   db.exec(`DELETE FROM ${table} WHERE Id IN (${ids.join(",")})`);
 }
+
+modules.exports = {
+  initializeDatabase,
+  loadDatabase,
+  saveDatabase,
+  insertData,
+  deleteData,
+};

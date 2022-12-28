@@ -1,3 +1,4 @@
+crypto = require("crypto");
 const BASE = "https://api.binance.com/api/v3";
 
 //Get a list of all currencies using binance api
@@ -70,6 +71,7 @@ async function createOrder(
     side: direction,
     type: order_type,
     timeInForce: "GTC",
+    timestamp: Date.now(),
     quantity: amount,
     price: price,
   });
@@ -80,6 +82,35 @@ async function createOrder(
   const headers = {
     "X-MBX-APIKEY": api_key,
   };
+
+  params.append("signature", signature);
+
+  const order = await fetch(BASE + "/order?" + params, {
+    method: "POST",
+    headers,
+  })
+    .then((res) => res.json())
+    .catch((erreur) => {
+      console.log(erreur);
+    });
+  console.log(order);
+  return order;
+}
+
+async function cancelOrder(api_key, secret_key, uuid) {
+  const params = new URLSearchParams({
+    symbol: pair,
+    timestamp: Date.now(),
+    orderId: uuid,
+  });
+  const signature = crypto
+    .createHmac("sha256", secret_key)
+    .update(params.toString())
+    .digest("hex");
+  const headers = {
+    "X-MBX-APIKEY": api_key,
+  };
+  params.append("signature", signature);
   const order = await fetch(BASE + "/order?" + params, {
     method: "POST",
     headers,
@@ -92,26 +123,11 @@ async function createOrder(
   return order;
 }
 
-async function cancelOrder(api_key, secret_key, uuid) {
-  const params = new URLSearchParams({
-    symbol: pair,
-    orderId: uuid,
-  });
-  const signature = crypto
-    .createHmac("sha256", secret_key)
-    .update(params.toString())
-    .digest("hex");
-  const headers = {
-    "X-MBX-APIKEY": api_key,
-  };
-  const order = await fetch(BASE + "/order?" + params, {
-    method: "DELETE",
-    headers,
-    signature,
-  })
-    .then((res) => res.json())
-    .catch((erreur) => {
-      console.log(erreur);
-    });
-  return order;
-}
+module.exports = {
+  getCurrencyList,
+  getDepth,
+  refreshDataCandle,
+  refreshData,
+  createOrder,
+  cancelOrder,
+};
